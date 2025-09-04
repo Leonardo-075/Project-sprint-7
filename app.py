@@ -14,7 +14,7 @@ min_price, max_price = st.slider(
     (int(car_data['price'].min()), int(
         car_data['price'].max()))  # valor por defecto
 )
-# filtrar los datos según el modelo seleccionado
+# filtrar los datos según el rango de precio seleccionado
 filtered_data = car_data[(car_data['price'] >= min_price) & (
     car_data['price'] <= max_price)]
 st.write(
