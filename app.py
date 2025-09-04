@@ -6,8 +6,20 @@ st.header('Visualización de datos de anuncios de venta de coches')
 
 car_data = pd.read_csv('vehicles_us.csv')  # leer los datos
 
-# Crear tabla de datos
-st.dataframe(car_data)
+# seleccionar rango de precio con un deslizador
+min_price, max_price = st.slider(
+    'Selecciona el rango de precio de los coches',
+    int(car_data['price'].min()),  # valor mínimo del deslizador
+    int(car_data['price'].max()),  # valor máximo del deslizador
+    (int(car_data['price'].min()), int(
+        car_data['price'].max()))  # valor por defecto
+)
+# filtrar los datos según el modelo seleccionado
+filtered_data = car_data[(car_data['price'] >= min_price) & (
+    car_data['price'] <= max_price)]
+st.write(
+    f'Número de coches en el rango de precio seleccionado: {len(filtered_data)}')
+st.dataframe(filtered_data)  # mostrar los datos filtrados en una tabla
 
 # crear un botón para el histograma.
 hist_button = st.button('Construir histograma')
@@ -39,7 +51,13 @@ if disp_button:  # al hacer clic en el botón
 
     # crear un diagrama de dispersión
     fig = px.scatter(car_data, x='model_year', y='price',
-                     title='Diagrama de dispersión del modelo respecto al precio')
+                     title='Diagrama de dispersión del modelo respecto al precio de los coches')
+
+    # agregar etiquetas
+    fig.update_layout(
+        xaxis_title='Modelo del vehículo (año)',
+        yaxis_title='Precio (USD)',
+    )
 
     # mostrar un gráfico Plotly interactivo
     st.plotly_chart(fig, use_container_width=True, theme="streamlit")
